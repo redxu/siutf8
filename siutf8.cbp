@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="siutf8" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../bin/Debug/siutf8" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="user32" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="../bin/Release/siutf8" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="hook/hookapi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hook/hookapi.h" />
+		<Unit filename="hook/ldasm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hook/ldasm.h" />
+		<Unit filename="sifilemgr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sifilemgr.h" />
+		<Unit filename="sihandlemgr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sihandlemgr.h" />
+		<Unit filename="siutf8.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="utf8.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="utf8.h" />
+		<Unit filename="utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="utils.h" />
+		<Unit filename="winapihook.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="winapihook.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
