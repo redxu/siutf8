@@ -48,6 +48,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="hook/ldasm.h" />
+		<Unit filename="md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="md5.h" />
 		<Unit filename="sifilemgr.c">
 			<Option compilerVar="CC" />
 		</Unit>

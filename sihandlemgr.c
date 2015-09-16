@@ -33,6 +33,10 @@ static void SiHandle_Destory(struct SiHandleLink* node)
 //Ìí¼Óµ½Á´±í
 void SiHandle_Add(HANDLE handle,int u8flag,char* orgfile,char* gbkfile)
 {
+	if(handle == INVALID_HANDLE_VALUE)
+	{
+		return;
+	}
 	struct SiHandleLink* file = SiHandle_Create(handle,u8flag,orgfile,gbkfile);
 	struct SiHandleLink* tmp = si_handle_link;
 	

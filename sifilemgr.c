@@ -15,12 +15,13 @@ typedef struct SiFileLink
 static struct SiFileLink* si_file_link = NULL;
 
 //创建一个SiFileLink结构
-static struct SiFileLink* SiFile_Create(unsigned long hash,int u8flag,char* orgfile,char* gbkfile)
+static struct SiFileLink* SiFile_Create(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* gbkfile)
 {
 	struct SiFileLink* tmp = (struct SiFileLink*)malloc(sizeof(struct SiFileLink));
 	memset(tmp,0,sizeof(struct SiFileLink));
 	tmp->fileinfo.hash = hash;
 	tmp->fileinfo.u8flag = u8flag;
+	memcpy(tmp->fileinfo.orgmd5,md5,16);
 	strcpy(tmp->fileinfo.orgfile,orgfile);
 	strcpy(tmp->fileinfo.gbkfile,gbkfile);
 	return tmp;
@@ -37,9 +38,9 @@ static void SiFile_Destory(struct SiFileLink* file)
 }
 
 //添加到链表
-void SiFile_Add(unsigned long hash,int u8flag,char* orgfile,char* gbkfile)
+void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* gbkfile)
 {
-	struct SiFileLink* file = SiFile_Create(hash,u8flag,orgfile,gbkfile);
+	struct SiFileLink* file = SiFile_Create(hash,u8flag,md5,orgfile,gbkfile);
 	
 	struct SiFileLink* tmp = si_file_link;
 	if(tmp == NULL)

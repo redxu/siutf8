@@ -7,13 +7,14 @@ typedef struct SiFileInfo
 {
 	unsigned long hash;
 	int u8flag;
+	unsigned char orgmd5[16];
 	char orgfile[256];
 	char gbkfile[256];
 };
 
 
 //添加到链表
-void SiFile_Add(unsigned long hash,int u8flag,char* orgfile,char* gbkfile);
+void SiFile_Add(unsigned long hash,int u8flag,unsigned char md5[16],char* orgfile,char* gbkfile);
 
 
 //删除临时文件
