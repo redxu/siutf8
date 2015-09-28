@@ -57,67 +57,121 @@ void gbk_to_utf8(const char* gbk,char* u8,DWORD* u8size)
 	free(ansi);
 }
 
+/**
+ * 检查bit位是否为真
+ * @param  value [待检测值]
+ * @param  bit   [1~8位 低~高]
+ * @return       [1 真 0 假]
+ */
+static inline int CheckBit(unsigned char value, int bit)
+{
+	unsigned char bitvalue[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+
+	if((bit >= 1)&&(bit <= 8))
+	{
+		 if(value & bitvalue[bit-1])
+		 	return(1);
+		 else
+		 	return(0);
+	}
+	else
+	{
+		printf("FILE: %s LINE: %d -- 传入的函数参数错误! bit=[%d]\n",
+			__FILE__, __LINE__, bit);
+		return(-1);
+	}
+}
+
 //2 utf8 dom
 //1 utf8
 //0 not utf8
 int IsUtf8(char* buf,int size)
 {
-	int isu8;
-	unsigned char* pstart = (unsigned char*)buf;
-	unsigned char* pend = (unsigned char*)buf+size;
+	int i;
+	int u8 = 0;
+	int u8len = 0;
+	int firstbyte = 0;
 	const char BOM[3] = {0xef,0xbb,0xbf};
-	unsigned char current_byte;
-	unsigned char previous_byte;
-	int good,bad;
-	good = bad = 0;
-	
+
 	if(size == 0)
 	{
 		return 0;
 	}
-	if(strncmp(buf,BOM,3) == 0)
+	if(size >= 3 && strncmp(buf,BOM,3) == 0)
 	{
 		return 2;
 	}
 
-	current_byte = previous_byte = *pstart;
-	while(pstart < pend)
+	for(i=0;i<size;i++)
 	{
-		current_byte = *pstart;
-		if((current_byte & 0xc0) == 0x80)
+		//should be binrary file.
+		if(buf[i] == 0)
 		{
-			if((previous_byte & 0xc0) == 0xc0)
+			return 0;
+		}
+
+
+		if(firstbyte == 0)
+		{
+			//pure ascii
+			if((buf[i]&0xff) <= 127)
 			{
-				good++;
+				u8 = 0;
+				u8len = 0;
 			}
-			else if((previous_byte & 0x80) == 0x00)
+			//unknow char
+			else if((buf[i]&0xff) > 0xef)
 			{
-				bad++;
+				u8 = 0;
+				u8len = 0;
+			}
+			else
+			{
+				firstbyte = 1;
+				//111*****
+				if(CheckBit(buf[i],7) == 1 && CheckBit(buf[i],6) == 1)
+				{
+					u8 = 1;
+					u8len++;
+				}
+				else
+				{
+					i++;
+					firstbyte = 0;
+					u8 = 0;
+					u8len = 0;
+				}
 			}
 		}
-		else if((previous_byte & 0xc0) == 0xc0)
+		else
 		{
-			bad++;
+			if((buf[i]&0xff) <= 127 || (buf[i]&0xff) > 0xef)
+			{
+				firstbyte = 0;
+				
+				if(u8 == 1 && u8len % 3 != 0)
+				{
+					u8 = 0;
+				}
+				else if(u8 == 1 && u8len % 3 == 0)
+				{
+					//so we mark it utf8
+					break;
+				}
+			}
+			else
+			{
+				u8len++;
+			}
 		}
-		
-		previous_byte = current_byte;
-		pstart++;
-	}
-	
-	if(good > bad)
-	{
-		isu8 = 1;
-	}
-	else if(good == bad)
-	{
-		//pure ascii
-		isu8 = 0;
-	}
-	else
-	{
-		isu8 = 0;
 	}
 
-	return isu8;
+	//check tail loop
+	if(u8 == 1 && u8len % 3 != 0)
+	{
+		u8 = 0;
+	}
+
+	return u8;
 }
 

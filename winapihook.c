@@ -78,6 +78,7 @@ HANDLE WINAPI HookCreateFile(
     	//convert
     	if(u8flag != 0)
     	{    		
+    		//OutputDebugStringEx("[%d]%s",u8flag,lpFileName);
     		DWORD gbksize = 0;
     		DWORD gbkwriten;
     		char* gbk = (char *)malloc(fsize+1);
@@ -109,7 +110,7 @@ HANDLE WINAPI HookCreateFile(
     	if(u8flag != 0)
     	{
     		memset(fmd5,0,sizeof(fmd5));
-    		Md5Sum(buffer,fsize,fmd5);
+    		Md5Sum((unsigned char *)buffer,fsize,fmd5);
     	}
     	  	
     	free(buffer);
@@ -145,7 +146,7 @@ HANDLE WINAPI HookCreateFile(
 
 		    	//calc md5sum
 		    	memset(fmd5,0,sizeof(fmd5));
-				Md5Sum(buffer,fsize,fmd5);
+				Md5Sum((unsigned char *)buffer,fsize,fmd5);
 				if(memcmp(fmd5,si_file_info->orgmd5,16) != 0)
 				{
 					OutputDebugStringEx("u8[%s] Changed outside!",lpFileName);
@@ -276,7 +277,7 @@ BOOL WINAPI HookSetEndOfFile(
 		struct SiFileInfo* si_file_info = FindSiFileFromLink(hash);
 		unsigned char fmd5[16];
 		memset(fmd5,0,sizeof(fmd5));
-		Md5Sum(utf8,utf8size-1,fmd5);
+		Md5Sum((unsigned char *)utf8,utf8size-1,fmd5);
 		memcpy(si_file_info->orgmd5,fmd5,16);
 		
 		free(utf8);
