@@ -119,7 +119,7 @@ int IsUtf8(char* buf,int size)
 				u8 = 0;
 				u8len = 0;
 			}
-			//unknow char
+			//out of u8 range
 			else if((buf[i]&0xff) > 0xef)
 			{
 				u8 = 0;
@@ -128,8 +128,8 @@ int IsUtf8(char* buf,int size)
 			else
 			{
 				firstbyte = 1;
-				//111*****
-				if(CheckBit(buf[i],7) == 1 && CheckBit(buf[i],6) == 1)
+				//u8 3b 1110xxxx 10xxxxxx 10xxxxxx
+				if(CheckBit(buf[i],7) == 1 && CheckBit(buf[i],6) == 1 && CheckBit(buf[i],5) == 0)
 				{
 					u8 = 1;
 					u8len++;
@@ -145,7 +145,7 @@ int IsUtf8(char* buf,int size)
 		}
 		else
 		{
-			if((buf[i]&0xff) <= 127 || (buf[i]&0xff) > 0xef)
+			if((buf[i]&0xff) <= 127 || (buf[i]&0xff) > 0xbf)
 			{
 				firstbyte = 0;
 				
