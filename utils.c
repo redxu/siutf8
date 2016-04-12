@@ -34,7 +34,8 @@ unsigned long HashString(const char* str)
 	return(ret); 	
 }
 
-static void GetFilenameFromPath(const char* path,char* filename)
+//获取短文件名
+void GetFilenameFromPath(const char* path,char* filename)
 {
 	int len = strlen(path);
 	int i;
@@ -61,6 +62,7 @@ void GetTmpFilename(const char* orgfile,char* newfile)
 }
 */
 
+//获取临时文件名
 void GetTmpFilename(unsigned long hash,char* newfile)
 {
 	char tmppath[256];
@@ -68,3 +70,30 @@ void GetTmpFilename(unsigned long hash,char* newfile)
 	sprintf(newfile,"%s\\%lu.gbk",tmppath,hash);	
 }
 
+char* ltrim(char* str)
+{
+	char* p = str;
+	while(*p == ' ' || *p == '\t')
+	{
+		p++;
+	}
+	return p;
+}
+
+char* rtrim(char* str)
+{
+	int i;
+	i = strlen(str) - 1;
+	while(i >= 0 && (str[i] == ' ' || str[i] == '\t'))
+	{
+		str[i--] = 0;
+	}
+
+	return str;
+}
+
+//去除字符串空格
+char* Trim(char* str)
+{
+	return ltrim(rtrim(str));
+}

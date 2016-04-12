@@ -1,4 +1,5 @@
 #include "sifilemgr.h"
+#include "utils.h"
 #include <string.h>
 #include <windows.h>
 
@@ -92,6 +93,34 @@ void SiFile_Unlink(void)
 	return;	
 }
 
+/**
+ * [根据短文件名查找文件编码]
+ * @param  title [短文件名]
+ * @return       [-1 未找到 0 GBK >0 UTF8]
+ */
+int FindU8FlagFromLink(char* title)
+{
+	int count = 0;
 
+	struct SiFileLink* cur = si_file_link;
+	struct SiFileLink* last = NULL;
+	
+	while(cur)
+	{
+		char filename[256];
+		GetFilenameFromPath(cur->fileinfo.orgfile, filename);
+		if(strcasecmp(filename, Trim(title)) == 0)
+		{
+			count++;
+			last = cur;
+		}
+
+		cur = cur->next;
+	}
+
+	if(count == 0 || count > 1)
+		return -1;
+	return last->fileinfo.u8flag;
+}
 
 

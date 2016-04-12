@@ -13,4 +13,10 @@ unsigned long HashString(const char* str);
 //void GetTmpFilename(const char* orgfile,char* newfile);
 void GetTmpFilename(unsigned long hash,char* newfile);
 
+//获取短文件名
+void GetFilenameFromPath(const char* path,char* filename);
+
+//去除字符串空格
+char* Trim(char* str);
+
 #endif
