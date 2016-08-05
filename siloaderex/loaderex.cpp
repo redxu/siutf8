@@ -14,6 +14,7 @@ CHAR szDllPath[1024];
 CHAR szCommand[2048];
 CHAR szPath[1024];
 
+#define HOOK_DLL    "loaderdll.dll"
 //////////////////////////////////////////////////////////////////////////////
 //
 static BOOL CALLBACK ListBywayCallback(PVOID pContext,
@@ -48,7 +49,7 @@ static BOOL CALLBACK AddBywayCallback(PVOID pContext,
     PBOOL pbAddedDll = (PBOOL)pContext;
     if (!pszFile && !*pbAddedDll) {                     // Add new byway.
         *pbAddedDll = TRUE;
-        *ppszOutFile = szDllPath;
+        *ppszOutFile = HOOK_DLL;
     }
     return TRUE;
 }

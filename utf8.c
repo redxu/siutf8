@@ -63,7 +63,7 @@ void gbk_to_utf8(const char* gbk,char* u8,DWORD* u8size)
  * @param  bit   [1~8位 低~高]
  * @return       [1 真 0 假]
  */
-static inline int CheckBit(unsigned char value, int bit)
+static int CheckBit(unsigned char value, int bit)
 {
 	unsigned char bitvalue[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
 

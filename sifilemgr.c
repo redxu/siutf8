@@ -109,7 +109,7 @@ int FindU8FlagFromLink(char* title)
 	{
 		char filename[256];
 		GetFilenameFromPath(cur->fileinfo.orgfile, filename);
-		if(strcasecmp(filename, Trim(title)) == 0)
+		if(_stricmp(filename, Trim(title)) == 0)
 		{
 			count++;
 			last = cur;

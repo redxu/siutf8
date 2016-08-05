@@ -2,9 +2,13 @@
 #include "winapihook.h"
 #include "sifilemgr.h"
 
+BOOL g_isHooked = FALSE;
+
 static void HookSI(void)
 {
-	HookWinApi();
+    if (g_isHooked) {
+        HookWinApi();
+    }
 }
 
 static void UnhookSI(void)
@@ -18,6 +22,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     switch (fdwReason)
     {
         case DLL_PROCESS_ATTACH:
+            DisableThreadLibraryCalls(hinstDLL);
             HookSI();
             break;
 
@@ -34,3 +39,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     return TRUE; // succesful
 }
 
+#ifdef _WIN64
+#pragma comment(linker, "/EXPORT:VoidExport,@1,NONAME")
+#else
+#pragma comment(linker, "/EXPORT:_VoidExport,@1,NONAME")
+#endif
+
+VOID VoidExport(){}

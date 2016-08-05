@@ -5,6 +5,7 @@
 #include "sifilemgr.h"
 #include "sihandlemgr.h"
 #include "md5.h"
+#include <detours.h>
 
 
 typedef HANDLE (WINAPI *CreateFileFn)(
@@ -290,26 +291,21 @@ BOOL WINAPI HookSetEndOfFile(
 
 BOOL HookWinApi(void)
 {
-	OrgCreateFile = (CreateFileFn)HookFunction("kernel32.dll","CreateFileA",(void *)HookCreateFile);
-	if(OrgCreateFile == NULL)
-	{
-		OutputDebugString("Hook CreateFile Failed!");
-		return FALSE;
-	}
-	
-	OrgCloseHandle = (CloseHandleFn)HookFunction("kernel32.dll","CloseHandle",(void *)HookCloseHandle);
-	if(OrgCloseHandle == NULL)
-	{
-		OutputDebugString("Hook CloseHandle Failed!");
-		return FALSE;
-	}
-	
-	OrgSetEndOfFile = (SetEndOfFileFn)HookFunction("kernel32.dll","SetEndOfFile",(void *)HookSetEndOfFile);
-	if(OrgSetEndOfFile == NULL)
-	{
-		OutputDebugString("Hook SetEndOfFile Failed!");
-		return FALSE;
-	}
-	
+    OrgCreateFile = CreateFileA;
+    OrgCloseHandle = CloseHandle;
+    OrgSetEndOfFile = SetEndOfFile;
+
+    DetourRestoreAfterWith();
+    DetourTransactionBegin();
+    DetourUpdateThread(GetCurrentThread());
+    DetourAttach(&OrgCreateFile, HookCreateFile);
+    DetourAttach(&OrgCloseHandle, HookCloseHandle);
+    DetourAttach(&OrgSetEndOfFile, HookSetEndOfFile);
+    LONG error = DetourTransactionCommit();
+    if (NO_ERROR != error) {
+        OutputDebugString("Hook CreateFile/CloseHandle/SetEndOfFile Failed!");
+        return FALSE;
+    }
+
 	return TRUE;
 }
